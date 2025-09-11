@@ -9,7 +9,13 @@ public:
 
     void run();
 
+    void drawLine();
+    
+    bool repeat();
+
 private:
+    bool running;
+    SDL_Event event;
     SDL_Window* window;
     SDL_Renderer* renderer;
 };

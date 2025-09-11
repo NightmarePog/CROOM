@@ -1,5 +1,6 @@
 #include "core/window.hpp"
 #include <SDL2/SDL.h>
+#include <cstdio>
 #include <stdexcept>
 
 Window::Window(const char* title, int width, int height) {
@@ -30,18 +31,18 @@ Window::~Window() {
 }
 
 void Window::run() {
-    bool running = true;
-    SDL_Event event;
 
-    while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN)
-                running = false;
-        }
-
-        SDL_SetRenderDrawColor(renderer, 0, 69, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
-        SDL_Delay(16);
+    
+}
+
+bool Window::repeat() {
+    printf("I am working!\n");
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN)
+            return false;
     }
+    return true;
 }
