@@ -10,6 +10,6 @@ class Game {
    public:
    Game(Map map, Player plr);
 
-   void run();
-
+   void tick();
+   
 };

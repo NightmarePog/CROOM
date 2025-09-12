@@ -1,7 +1,8 @@
 #pragma once
+#include "game/entity.hpp"
 #include "utils/vec2.hpp"
 
-class Player {
+class Player: public Entity {
    private:
    Vec2 position;
    int speed;

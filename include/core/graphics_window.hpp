@@ -1,19 +1,19 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-class Window {
+class GraphicsWindow {
 public:
-    explicit Window(const char* title, int width, int height);
+    explicit GraphicsWindow(const char* title, int width, int height);
 
-    ~Window();
-
-    void run();
-
+    ~GraphicsWindow();
+    
     void drawLine();
     
-    bool repeat();
+    bool tick();
 
 private:
+
+    bool is_quit_pressed();
     bool running;
     SDL_Event event;
     SDL_Window* window;
