@@ -1,6 +1,8 @@
 #include "core/graphics_window.hpp"
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 #include <SDL_keycode.h>
+#include <SDL_render.h>
 #include <stdexcept>
 
 GraphicsWindow::GraphicsWindow(const char* title, int width, int height) {
@@ -22,6 +24,7 @@ GraphicsWindow::GraphicsWindow(const char* title, int width, int height) {
         SDL_Quit();
         throw std::runtime_error(SDL_GetError());
     }
+
 }
 
 GraphicsWindow::~GraphicsWindow() {
@@ -32,20 +35,24 @@ GraphicsWindow::~GraphicsWindow() {
 
 
 bool GraphicsWindow::tick() {
-    // TODO for now i am just testing with texturing etc. :3, so this is not really finished
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 50, 255);
     SDL_RenderClear(renderer);
-
-
-
-
-
     SDL_RenderPresent(renderer);
     return is_quit_pressed();
 }
+
 bool GraphicsWindow::is_quit_pressed() {
     while (SDL_PollEvent(&event)) {
-        return !( event.type == SDL_KEYDOWN && (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE));
+        if (event.type == SDL_QUIT)
+            return false;
+        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+            return false;
     }
-    return true;
+    return true; // won't quit
+}
+
+
+SDL_Renderer* GraphicsWindow::get_renderer() {
+    return renderer;
 }
