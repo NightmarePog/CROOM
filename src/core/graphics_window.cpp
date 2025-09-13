@@ -36,13 +36,9 @@ bool GraphicsWindow::tick() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    SDL_Rect srcRect = {0, 0, 64, 64};
-    SDL_Rect dst     = {100, 100, 64, 64};
-    double angle     = 0.0;
-    SDL_Point center = {dst.w / 2, dst.h / 2};
-    //SDL_Texture* texture = load; 
 
-    SDL_RenderCopyEx(renderer, texture, &srcRect, &dst, angle, &center, SDL_FLIP_NONE);
+
+
 
     SDL_RenderPresent(renderer);
     return is_quit_pressed();
