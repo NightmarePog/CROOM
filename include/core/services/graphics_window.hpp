@@ -13,8 +13,6 @@ public:
     
     bool tick();
 
-    SDL_Renderer* get_renderer();
-
 private:
     bool is_quit_pressed();
     bool running;

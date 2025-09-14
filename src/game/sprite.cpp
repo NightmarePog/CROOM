@@ -1,11 +1,10 @@
 #include "game/sprite.hpp"
-#include "utils/vec2.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <SDL_render.h>
 #include <iostream>
 
-Sprite::Sprite(SDL_Renderer* renderer, std::string texture_path, Vec2 position_a, Vec2 position_b) {
+Sprite::Sprite(SDL_Renderer* renderer, std::string texture_path, Sprite_Cords cords) {
     if (!renderer) {
         std::cerr << "Sprite: renderer is null" << std::endl;
         return;
@@ -15,7 +14,7 @@ Sprite::Sprite(SDL_Renderer* renderer, std::string texture_path, Vec2 position_a
     this->texture = this->load_texture(renderer, texture_path.c_str());
     if (this->texture) {texture_color = {255,255,255,255};}
 
-    cords = {position_a, position_b};
+    this->cords = cords;
 
 
 }

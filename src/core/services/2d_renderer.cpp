@@ -1,4 +1,4 @@
-#include "core/2d_render.hpp"
+#include "core/services/2d_render.hpp"
 #include "game/map.hpp"
 #include "game/sprite.hpp"
 #include <SDL_render.h>
@@ -13,6 +13,5 @@ void render(SDL_Renderer *renderer, Map *map) {
         Sprite_Cords cords = map->get_entity_vector()[i]->get_cords();
         SDL_RenderDrawLine(renderer, cords.cord_a.x, cords.cord_a.y, cords.cord_b.x, cords.cord_b.y);
     }
-    SDL_RenderPresent(renderer);
 };
 

@@ -1,8 +1,12 @@
-#include "core/graphics_window.hpp"
+#include "core/services/graphics_window.hpp"
+#include "core/services/2d_render.hpp"
+#include "utils/globals.hpp"
+
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <SDL_keycode.h>
 #include <SDL_render.h>
+
 #include <stdexcept>
 
 GraphicsWindow::GraphicsWindow(const char* title, int width, int height) {
@@ -18,8 +22,8 @@ GraphicsWindow::GraphicsWindow(const char* title, int width, int height) {
         throw std::runtime_error(SDL_GetError());
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
+    globals::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!globals::renderer) {
         SDL_DestroyWindow(window);
         SDL_Quit();
         throw std::runtime_error(SDL_GetError());
@@ -28,7 +32,7 @@ GraphicsWindow::GraphicsWindow(const char* title, int width, int height) {
 }
 
 GraphicsWindow::~GraphicsWindow() {
-    if (renderer) SDL_DestroyRenderer(renderer);
+    if (globals::renderer) SDL_DestroyRenderer(globals::renderer);
     if (window) SDL_DestroyWindow(window);
     SDL_Quit();
 }
@@ -36,9 +40,10 @@ GraphicsWindow::~GraphicsWindow() {
 
 bool GraphicsWindow::tick() {
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 50, 255);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+    SDL_SetRenderDrawColor(globals::renderer, 0, 0, 50, 255);
+    SDL_RenderClear(globals::renderer);
+    render(globals::renderer, &globals::map);
+    SDL_RenderPresent(globals::renderer);
     return is_quit_pressed();
 }
 
@@ -49,10 +54,5 @@ bool GraphicsWindow::is_quit_pressed() {
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
             return false;
     }
-    return true; // won't quit
-}
-
-
-SDL_Renderer* GraphicsWindow::get_renderer() {
-    return renderer;
+    return true;
 }

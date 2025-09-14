@@ -1,5 +1,6 @@
 #include "game/map.hpp"
 #include "game/sprite.hpp"
+#include "utils/globals.hpp"
 #include "utils/vec2.hpp"
 #include <vector>
 
@@ -24,4 +25,41 @@ void Map::clear_entities() {
 
 const std::vector<std::unique_ptr<Sprite>>& Map::get_entity_vector() {
     return sprite_vec;
+}
+
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <stdexcept>
+
+void Map::import_from_csv(const char* path) {
+    int line[4];
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open CSV file");
+    }
+
+
+    std::string line_str;
+    while (std::getline(file, line_str)) {
+        std::istringstream ss(line_str);
+        std::string token;
+        float values[4];
+        int i = 0;
+
+        while (std::getline(ss, token, ',') && i < 4) {
+            try {
+                values[i] = std::stoi(token);
+            } catch (...) {
+                throw std::runtime_error("Invalid number in CSV");
+            }
+            i++;
+        }
+
+        if (i == 4) {
+            add_entity(new Sprite(globals::renderer, "", {{values[0], values[1]}, {values[2], values[3]}}));
+        } else {
+            throw std::runtime_error("CSV line does not have 4 values");
+        }
+    }
 }

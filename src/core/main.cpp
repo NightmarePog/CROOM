@@ -1,31 +1,36 @@
 #include <SDL2/SDL.h>
 #include <SDL_timer.h>
-#include "core/2d_render.hpp"
-#include "core/graphics_window.hpp"
-#include "game/entity.hpp"
+#include "core/services/graphics_window.hpp"
 #include "game/map.hpp"
-#include "game/sprite.hpp"
 #include "utils/const.hpp"
-#include "core/2d_render.hpp"
+#include "utils/globals.hpp"
 
 
 GraphicsWindow window("a window", 1000, 1000);
-Map map = Map({128, 128});
 
 
 bool running = true;
+
+// Main loop: repeatedly calls window.tick() every `interval` seconds.
+// Updates the window and processes input events.
 void heartbeat(double interval) {
    while (running) {
    running = window.tick();
-   render(window.get_renderer(), &map);
    SDL_Delay(interval*1000);
    }
 }
 
-int main() {
-   map.add_entity(
-      new Sprite(window.get_renderer(), "A test", {20,30}, {80,10})
+/**
+function being called after everything is loadedd
+*/
+void ready() {
+   heartbeat(constants::FRAME_INTERVAL);
+}
 
-   );
-   heartbeat(FRAME_INTERVAL);
+int main() {
+   // loads all needed assets
+   globals::map = Map({128, 128});
+   globals::map.import_from_csv("../assets/map.csv");
+
+   ready();
 }
