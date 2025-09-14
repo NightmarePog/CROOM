@@ -1,8 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL_timer.h>
-#include "core/services/graphics_window.hpp"
+#include "core/graphics_window.hpp"
 #include "game/map.hpp"
-#include "utils/const.hpp"
 #include "utils/globals.hpp"
 
 
@@ -21,7 +20,7 @@ void heartbeat(double interval) {
 }
 
 /**
-function being called after everything is loadedd
+function being called after everything is loaded
 */
 void ready() {
    heartbeat(constants::FRAME_INTERVAL);

@@ -1,5 +1,5 @@
-#include "core/services/graphics_window.hpp"
-#include "core/services/2d_render.hpp"
+#include "core/graphics_window.hpp"
+#include "core/2d_render.hpp"
 #include "utils/globals.hpp"
 
 #include <SDL2/SDL.h>
