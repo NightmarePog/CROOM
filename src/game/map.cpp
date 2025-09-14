@@ -2,7 +2,13 @@
 #include "game/sprite.hpp"
 #include "utils/globals.hpp"
 #include "utils/vec2.hpp"
+
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <stdexcept>
+
 
 Map::Map(Vec2 map_size) {
     this->map_size = map_size;
@@ -23,14 +29,17 @@ void Map::clear_entities() {
     sprite_vec.clear();
 }
 
-const std::vector<std::unique_ptr<Sprite>>& Map::get_entity_vector() {
-    return sprite_vec;
+std::vector<Sprite*> Map::get_entity_vector() {
+    std::vector<Sprite*> result;
+    result.reserve(sprite_vec.size());
+
+    for (auto& e : sprite_vec) {
+        result.push_back(e.get());
+    }
+
+    return result;
 }
 
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <stdexcept>
 
 void Map::import_from_csv(const char* path) {
     int line[4];

@@ -4,6 +4,7 @@
 #include "game/sprite.hpp"
 #include "utils/vec2.hpp"
 #include <memory>
+#include <set>
 #include <vector>
 class Map {
    std::vector<std::unique_ptr<Sprite>> sprite_vec;
@@ -38,5 +39,5 @@ class Map {
       /**
       @returns whole vector of entities
       */
-      const std::vector<std::unique_ptr<Sprite>>& get_entity_vector();
+      std::vector<Sprite*> get_entity_vector();
 };
