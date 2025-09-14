@@ -1,99 +1,93 @@
 #include "core/bsp.hpp"
-#include "game/map.hpp"
 #include "game/sprite.hpp"
-#include "utils/vec2.hpp"
+#include "game/map.hpp"
+#include "utils/line_segment.hpp"
+
+#include <iostream>
+#include <queue>
 #include <vector>
 
-BSP::BSP(Map *map) {
-  this->map = map;
-  std::vector<Sprite *> sprites = map->get_entity_vector();
-  for (const auto &s : sprites) {
-    Sprite_Cords cords = s->get_cords();
-    this->candidates_pos.insert(cords.cord_a);
-    this->candidates_pos.insert(cords.cord_b);
-  }
-  create_bsp_tree();
+
+void print_node(BSPNode* node, int depth = 0) {
+    if (!node) return;
+
+    // Odsazení podle hloubky stromu
+    for (int i = 0; i < depth; ++i) std::cout << "  ";
+
+    std::cout << "Node (Leaf: " << static_cast<int>(node->leaf)
+              << ", Pos: (" << node->position.x << "," << node->position.y << "))\n";
+
+    if (node->front) {
+        for (int i = 0; i < depth; ++i) std::cout << "  ";
+        std::cout << "Front ->\n";
+        print_node(node->front, depth + 1);
+    }
+
+    if (node->back) {
+        for (int i = 0; i < depth; ++i) std::cout << "  ";
+        std::cout << "Back ->\n";
+        print_node(node->back, depth + 1);
+    }
 }
 
-void BSP::create_bsp_tree() {
-    BSPNode root_node = {
-        nullptr,          // parent
-        nullptr,          // children/nebo front/back
-        Leaf::UNKNOWN,    // stav listu
-        0                 // iterace
-    };
 
-    unresolved_nodes.push(root_node);
+BSP::BSP() {
+   std::queue<BSPNode*> node_queue;
+   std::cout << "BSP loaded :3" << std::endl;
+}
 
-    while (!unresolved_nodes.empty()) {
-        // vezmi aktuální uzel
-        BSPNode curr_node = unresolved_nodes.top();
-        unresolved_nodes.pop();
+void BSP::load_from_map(Map *map) {
+   std::vector<Sprite*> sprites = map->get_entity_vector();
+   for (Sprite* sprite : sprites) {
+      this->currect_node.node_segments.push_back(sprite->get_cords());
+   }
+}
 
-        // 1️⃣ najdi kandidáta a smaž ho ze setu
-        Vec2 candidate = find_cut_candidate();
-        delete_from_cand_set(candidate);
+void BSP::create_bsp() {
+   print_node(&currect_node);
+   currect_node = *node_queue.front(); // CAUSES SEG FAULT;
+   node_queue.pop();
+   currect_node.partition_segment = get_longest_segment(this->currect_node.node_segments);
+   Partition partition(currect_node.partition_segment);
 
-        // 2️⃣ otestuj, jestli je leaf
-        if (type_leaf(curr_node, map)) {
-            curr_node.leaf_state = Leaf::YES;
-            continue; // uzel je leaf, nic dále neděláme
+   currect_node.front = new BSPNode;
+   currect_node.back = new BSPNode;
+   currect_node.front->leaf = Leaf::EMPTY;
+   currect_node.back->leaf = Leaf::EMPTY;
+   for (const LineSegment& segment : currect_node.node_segments) {
+      if(partition.is_in_back(segment)) {
+         currect_node.back->leaf = Leaf::SOLID;
+         node_queue.push(currect_node.back);
+      }
+      if(partition.is_in_front(segment)) {
+         currect_node.front->leaf = Leaf::SOLID;
+         node_queue.push(currect_node.front);
+      }
+   }
+
+
+}
+
+
+LineSegment BSP::get_longest_segment(std::vector<LineSegment> segments) {
+    if (segments.empty())
+        throw std::runtime_error("No segments");
+
+    LineSegment* longest = &segments[0];
+    float max_length = 0.0f;
+
+    // counting
+    for (const LineSegment& seg : segments) {
+        Vec2 delta = seg.pos_a - seg.pos_b;
+        float length = std::sqrt(delta.x * delta.x + delta.y * delta.y);
+
+        if (length > max_length) {
+            max_length = length;
+            longest = const_cast<LineSegment*>(&seg);
         }
-
-        // 3️⃣ vytvoř potomky
-        BSPNode front = curr_node; // nebo nastav podle rozdělení
-        BSPNode back = curr_node;
-
-        front.iteration = curr_node.iteration + 1;
-        back.iteration = curr_node.iteration + 1;
-
-        // 4️⃣ vlož potomky do stacku pro další zpracování
-        unresolved_nodes.push(front);
-        unresolved_nodes.push(back);
     }
-}
-Vec2 BSP::find_cut_candidate() {
-  SplitAxis axis = choose_axis(this->iteration);
-    int sumCoord = 0;
 
-  auto get_coord = [axis](const Vec2 &c) -> int {
-    return (axis == SplitAxis::X) ? c.x : c.y;
-  };
-
-
-  for (const auto &c : candidates_pos) {
-    sumCoord += get_coord(c);
-  }
-  double center = sumCoord / static_cast<double>(candidates_pos.size());
-
-  Vec2 bestCandidate = *candidates_pos.begin();
-  double bestDist = std::abs(get_coord(bestCandidate) - center);
-
-  for (const auto &c : candidates_pos) {
-    double dist = std::abs(get_coord(c) - center);
-    if (dist < bestDist) {
-      bestDist = dist;
-      bestCandidate = c;
-    }
-  }
-
-  return bestCandidate;
+    return *longest;
 }
 
-SplitAxis BSP::choose_axis(int iteration) {
-  if (iteration % 2 == 0) {
-    return SplitAxis::X;
-  } else {
-    return SplitAxis::Y;
-  }
-}
-
-void BSP::delete_from_cand_set(Vec2 vec2) {
-
-    auto it = this->candidates_pos.find(vec2);
-
-    if (it != this->candidates_pos.end()) {
-        this->candidates_pos.erase(it);
-    }
-}
 

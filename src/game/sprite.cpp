@@ -4,53 +4,49 @@
 #include <SDL_render.h>
 #include <iostream>
 
-Sprite::Sprite(SDL_Renderer* renderer, std::string texture_path, Sprite_Cords cords) {
-    if (!renderer) {
-        std::cerr << "Sprite: renderer is null" << std::endl;
-        return;
-    }
-    // process texture
-    SDL_Color texture_color = {255, 255, 0, 255};
-    this->texture = this->load_texture(renderer, texture_path.c_str());
-    if (this->texture) {texture_color = {255,255,255,255};}
+Sprite::Sprite(SDL_Renderer *renderer, std::string texture_path,
+               LineSegment line) {
+  if (!renderer) {
+    std::cerr << "Sprite: renderer is null" << std::endl;
+    return;
+  }
+  // process texture
+  SDL_Color texture_color = {255, 255, 0, 255};
+  this->texture = this->load_texture(renderer, texture_path.c_str());
+  if (this->texture) {
+    texture_color = {255, 255, 255, 255};
+  }
 
-    this->cords = cords;
-
-
+  this->line = line;
 }
 
+Sprite::~Sprite() {}
 
-Sprite::~Sprite() {
-}
+SDL_Texture *Sprite::load_texture(SDL_Renderer *renderer,
+                                  const char *filepath) {
+  SDL_Surface *loadedSurface = SDL_LoadBMP(filepath);
+  if (!loadedSurface)
+    return nullptr;
 
-SDL_Texture* Sprite::load_texture(SDL_Renderer* renderer, const char* filepath) {
-    SDL_Surface* loadedSurface = SDL_LoadBMP(filepath);
-    if (!loadedSurface) return nullptr;
-
-    SDL_Surface* scaledSurface = SDL_CreateRGBSurface(0, TEXTURE_SIZE, TEXTURE_SIZE, 32, 0,0,0,0);
-    if (!scaledSurface) {
-        SDL_FreeSurface(loadedSurface);
-        return nullptr;
-    }
-
-    SDL_Rect srcRect = {0, 0, loadedSurface->w, loadedSurface->h};
-    SDL_Rect destRect = {0, 0, TEXTURE_SIZE, TEXTURE_SIZE};
-    SDL_BlitScaled(loadedSurface, &srcRect, scaledSurface, &destRect);
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, scaledSurface);
-
+  SDL_Surface *scaledSurface =
+      SDL_CreateRGBSurface(0, TEXTURE_SIZE, TEXTURE_SIZE, 32, 0, 0, 0, 0);
+  if (!scaledSurface) {
     SDL_FreeSurface(loadedSurface);
-    SDL_FreeSurface(scaledSurface);
+    return nullptr;
+  }
 
-    return texture;
+  SDL_Rect srcRect = {0, 0, loadedSurface->w, loadedSurface->h};
+  SDL_Rect destRect = {0, 0, TEXTURE_SIZE, TEXTURE_SIZE};
+  SDL_BlitScaled(loadedSurface, &srcRect, scaledSurface, &destRect);
+
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, scaledSurface);
+
+  SDL_FreeSurface(loadedSurface);
+  SDL_FreeSurface(scaledSurface);
+
+  return texture;
 }
 
+SDL_Texture *Sprite::get_texture() { return texture; }
 
-SDL_Texture* Sprite::get_texture() {
-    return texture;
-}
-
-Sprite_Cords Sprite::get_cords() {
-    return cords;
-}
-
+LineSegment Sprite::get_cords() { return line; }

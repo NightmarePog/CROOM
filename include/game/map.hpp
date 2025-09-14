@@ -4,7 +4,6 @@
 #include "game/sprite.hpp"
 #include "utils/vec2.hpp"
 #include <memory>
-#include <set>
 #include <vector>
 class Map {
    std::vector<std::unique_ptr<Sprite>> sprite_vec;

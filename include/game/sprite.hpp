@@ -3,26 +3,21 @@
 #include <SDL_rect.h>
 #include <SDL_render.h>
 #include <string>
-#include "utils/vec2.hpp"
+#include "utils/line_segment.hpp"
 
 constexpr int TEXTURE_SIZE = 64;
-
-struct Sprite_Cords {
-    Vec2 cord_a;
-    Vec2 cord_b;
-};
 
 class Sprite : public Entity {
 private: 
     SDL_Texture* texture;
-    Sprite_Cords cords;
+    LineSegment line;
 
     SDL_Texture* load_texture(SDL_Renderer* renderer, const char* path);
 
 public:
-    Sprite(SDL_Renderer* renderer, std::string texture_path, Sprite_Cords cords);
+    Sprite(SDL_Renderer* renderer, std::string texture_path, LineSegment cords);
     ~Sprite();
 
     SDL_Texture* get_texture();
-    Sprite_Cords get_cords();
+    LineSegment get_cords();
 };
