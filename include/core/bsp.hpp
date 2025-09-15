@@ -21,7 +21,6 @@ struct BSPNode {
     BSPNode *front;
     BSPNode *back;
     Leaf leaf;
-    Vec2 position;
     LineSegment partition_segment;
     std::vector<LineSegment> node_segments;
 };
@@ -30,9 +29,10 @@ struct BSPNode {
 class BSP {
     private: 
         BSPNode currect_node;
-        std::queue<BSPNode*> node_queue;
+        std::queue<BSPNode> node_queue;
         int level;
         bool is_bsp;
+        bool is_loaded = false;
 
         LineSegment get_longest_segment(std::vector<LineSegment> segments);
     public:
