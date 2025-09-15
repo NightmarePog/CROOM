@@ -5,6 +5,8 @@
 #include "game/sprite.hpp"
 #include "utils/line_segment.hpp"
 #include "utils/vec2.hpp"
+#include <algorithm>
+#include <memory>
 #include <queue>
 #include <vector>
 
@@ -18,27 +20,22 @@ enum class Leaf {
 
 
 struct BSPNode {
-    BSPNode *front;
-    BSPNode *back;
-    Leaf leaf;
-    LineSegment partition_segment;
-    std::vector<LineSegment> node_segments;
+    std::unique_ptr<BSPNode> front;
+    std::unique_ptr<BSPNode> back;
+    LineSegment splitter;
+    std::vector<LineSegment> segments;
 };
 
 
 class BSP {
     private: 
-        BSPNode currect_node;
-        std::queue<BSPNode> node_queue;
-        int level;
-        bool is_bsp;
-        bool is_loaded = false;
-
+        bool is_loaded;
+        BSPNode root;
         LineSegment get_longest_segment(std::vector<LineSegment> segments);
     public:
         BSP();
         void load_from_csv();
         void load_from_map(Map *map);
-        void create_bsp();
+        void build_bsp();
 };
 

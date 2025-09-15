@@ -29,6 +29,6 @@ int main() {
   globals::map.import_from_csv("../assets/map.csv");
   BSP bsp;
   bsp.load_from_map(&globals::map);
-  bsp.create_bsp();
+  bsp.build_bsp();
   ready();
 }
