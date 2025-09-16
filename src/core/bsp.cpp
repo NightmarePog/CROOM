@@ -36,6 +36,7 @@ void BSP::build_bsp() {
 
     this->root.splitter = get_longest_segment(this->root.segments);
 
+
     // TODO node classification
 }
 
@@ -60,4 +61,22 @@ LineSegment BSP::get_longest_segment(std::vector<LineSegment> segments) {
   }
 
   return longest;
+}
+
+
+void BSP::process_node(BSPNode node) {
+  node.partition = Partition(get_longest_segment(node.segments));
+  node.front = std::make_unique<BSPNode>();
+  node.back = std::make_unique<BSPNode>();
+  for (LineSegment &segment : node.segments) {
+    Side result = node.partition->decide_side(segment);
+    switch (result) {
+      case Side::BACK:
+        node.back->segments.push_back(segment);
+        break;
+      case Side::FRONT:
+        node.front->segments.push_back(segment);
+        break;
+      }
+  }
 }

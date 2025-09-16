@@ -1,6 +1,11 @@
 #pragma once
 #include "utils/vec2.hpp"
 
+enum class Side {
+    FRONT,
+    BACK,
+};
+
 typedef struct {
     Vec2 pos_a;
     Vec2 pos_b;
@@ -14,6 +19,7 @@ class Partition {
 
     public:
         Partition(LineSegment partition);
+        Side decide_side(LineSegment segment);
         bool is_in_front(LineSegment segment);
         bool is_in_back(LineSegment segment) ;
 };

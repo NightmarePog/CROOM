@@ -1,15 +1,10 @@
 #pragma  once
 
-#include "game/entity.hpp"
 #include "game/map.hpp"
-#include "game/sprite.hpp"
 #include "utils/line_segment.hpp"
-#include "utils/vec2.hpp"
-#include <algorithm>
 #include <memory>
-#include <queue>
+#include <optional>
 #include <vector>
-
 
 
 
@@ -22,7 +17,7 @@ enum class Leaf {
 struct BSPNode {
     std::unique_ptr<BSPNode> front;
     std::unique_ptr<BSPNode> back;
-    LineSegment splitter;
+    std::optional<Partition> partition;
     std::vector<LineSegment> segments;
 };
 
@@ -32,6 +27,7 @@ class BSP {
         bool is_loaded;
         BSPNode root;
         LineSegment get_longest_segment(std::vector<LineSegment> segments);
+        void process_node(BSPNode node);
     public:
         BSP();
         void load_from_csv();
