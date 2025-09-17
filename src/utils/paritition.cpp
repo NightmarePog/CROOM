@@ -1,5 +1,6 @@
 #include "utils/line_segment.hpp"
 #include "core/bsp.hpp"
+#include <stdexcept>
 
 
 Partition::Partition(LineSegment partition) {
@@ -14,6 +15,7 @@ Side Partition::decide_side(LineSegment segment) {
     if (is_in_back(segment)) {
         return  Side::BACK;
     }
+    throw std::runtime_error("Partition::decide_side - unknown side type");
 }
 
 bool Partition::is_in_front(LineSegment segment) {
