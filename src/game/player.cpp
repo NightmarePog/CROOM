@@ -2,7 +2,8 @@
 
 Player::Player(int speed) {
   this->speed = speed;
-  this->position = {0, 0};
+  this->position = {64, 64};
+    // TODO default position = map center
 }
 
 Vec2 Player::get_position() { return this->position; }
