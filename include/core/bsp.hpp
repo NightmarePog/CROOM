@@ -18,7 +18,7 @@ enum class Leaf {
 struct BSPNode {
     std::unique_ptr<BSPNode> front;
     std::unique_ptr<BSPNode> back;
-    std::optional<Partition> partition;
+    Partition* partition;
     std::vector<LineSegment> segments;
 
 };

@@ -15,7 +15,7 @@
 
 BSP::BSP() {
   this->root = new BSPNode{
-      nullptr, nullptr, LineSegment{{0, 0}, {0, 0}}, {}};
+      nullptr, nullptr, new Partition(LineSegment{{0, 0}, {0, 0}}), {}};
   std::cout << "BSP loaded :3" << std::endl;
 }
 
@@ -36,10 +36,10 @@ void BSP::build_bsp() {
         throw std::runtime_error("no segments in BSP root");
     }
 
-    this->root->partition = Partition(get_longest_segment(this->root->segments));
+    this->root->partition = new Partition(get_longest_segment(this->root->segments));
 
     this->queue.push(this->root);
-    while (this->queue.empty() != 0) {
+    while (!this->queue.empty()) {
       std::cout << this->queue.size() << std::endl;
       process_node(this->queue.front());
       this->queue.pop();
@@ -64,7 +64,7 @@ LineSegment BSP::get_longest_segment(std::vector<LineSegment> segments) {
 
     if (length > max_length) {
       max_length = length;
-      longest = *const_cast<LineSegment *>(&seg);
+      longest = *const_cast<LineSegment*>(&seg);
     }
   }
 
@@ -73,7 +73,7 @@ LineSegment BSP::get_longest_segment(std::vector<LineSegment> segments) {
 
 
 void BSP::process_node(BSPNode *node) {
-  node->partition = Partition(get_longest_segment(node->segments));
+  node->partition = new Partition(get_longest_segment(node->segments));
   node->front = std::make_unique<BSPNode>();
   node->back = std::make_unique<BSPNode>();
   for (LineSegment &segment : node->segments) {
@@ -81,16 +81,22 @@ void BSP::process_node(BSPNode *node) {
     switch (result) {
       case Side::BACK:
         node->back->segments.push_back(segment);
+        //std::cout << "BACK" << std::endl;
         break;
       case Side::FRONT:
         node->front->segments.push_back(segment);
+        //std::cout << "FRONT" << std::endl;
         break;
       }
   }
-  if (node->back->segments.size() <= 1) {
+  //std::cout << "SIZE:" << this->queue.size() << std::endl;
+  if (node->back->segments.size() > 1) {
     this->queue.push(node->back.get());
+    std::cout << "QUENING ON BACK" << node->back->segments.size() << std::endl;
   }
-  if (node->front->segments.size() <= 1) {
+  if (node->front->segments.size() > 1) {
     this->queue.push(node->front.get());
+        std::cout << "QUENING ON FRONT" << node->front->segments.size() << std::endl;
   }
+  std::cout << this->queue.front() << std::endl;
 }

@@ -4,6 +4,7 @@
 enum class Side {
     FRONT,
     BACK,
+    BETWEEN,
 };
 
 typedef struct {
