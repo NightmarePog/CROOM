@@ -18,6 +18,18 @@ class Map {
        */
       int add_entity(Sprite *sprite);
       /**
+      adds player into map
+      @param *player - player sprite
+      */
+      void add_player(Player *player);
+      /**
+      gets player
+      @returns Player * - pointer on player instance
+      */
+      Player* get_player();
+      /** removes player instance from the map */
+      void remove_player();
+      /**
       remove entity with id from vector
       @param entity_id index of the entity to remove
       */

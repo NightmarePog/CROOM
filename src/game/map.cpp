@@ -1,4 +1,5 @@
 #include "game/map.hpp"
+#include "game/player.hpp"
 #include "game/sprite.hpp"
 #include "utils/globals.hpp"
 #include "utils/vec2.hpp"
@@ -20,6 +21,18 @@ void Map::remove_entity(int id) {
 int Map::add_entity(Sprite *sprite) {
   sprite_vec.push_back(std::unique_ptr<Sprite>(sprite));
   return sprite_vec.size() - 1;
+}
+
+void Map::add_player(Player *player) {
+  this->plr = player;
+}
+
+Player* Map::get_player() {
+  return this->plr;
+}
+
+void Map::remove_player() {
+  delete this->plr;
 }
 
 void Map::clear_entities() { sprite_vec.clear(); }

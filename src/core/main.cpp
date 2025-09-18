@@ -1,6 +1,7 @@
 #include "core/bsp.hpp"
 #include "core/graphics_window.hpp"
 #include "game/map.hpp"
+#include "game/player.hpp"
 #include "utils/globals.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_timer.h>
@@ -27,6 +28,7 @@ int main() {
   // loads all needed assets
   globals::map = Map({128, 128});
   globals::map.import_from_csv("../assets/map.csv");
+  globals::map.add_player(new Player(16));
   BSP bsp;
   bsp.load_from_map(&globals::map);
   bsp.build_bsp();
