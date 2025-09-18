@@ -13,10 +13,23 @@
 #include <vector>
 
 
+void printBSPTree(const BSPNode* node, const std::string& prefix = "", bool isFront = true) {
+    if (!node) return;
+
+    std::cout << prefix;
+    std::cout << (isFront ? "├──" : "└──");
+
+    std::cout << "[";
+    std::cout << "Segments: " << node->segments.size() << "]\n";
+
+    std::string newPrefix = prefix + (isFront ? "│   " : "    ");
+    printBSPTree(node->front.get(), newPrefix, true);
+    printBSPTree(node->back.get(), newPrefix, false);
+}
+
 BSP::BSP() {
   this->root = new BSPNode{
       nullptr, nullptr, new Partition(LineSegment{{0, 0}, {0, 0}}), {}};
-  std::cout << "BSP loaded :3" << std::endl;
 }
 
 void BSP::load_from_map(Map *map) {
@@ -36,21 +49,24 @@ void BSP::build_bsp() {
         throw std::runtime_error("no segments in BSP root");
     }
 
+      LineSegment parti = get_longest_segment(this->root->segments);
+
+  
     this->root->partition = new Partition(get_longest_segment(this->root->segments));
 
     this->queue.push(this->root);
     while (!this->queue.empty()) {
-      std::cout << this->queue.size() << std::endl;
       process_node(this->queue.front());
       this->queue.pop();
     }
     std::cout << "BSP tree created!" << std::endl;
     // check if output is correct
+    // basically tests just idk how -w-
+    printBSPTree(root);
 }
 
 LineSegment BSP::get_longest_segment(std::vector<LineSegment> segments) {
-  printf("[GET LONGEST] %f\n", segments.front().pos_a.x);
-  return LineSegment{{0, 0}, {0, 0}};
+
   if (segments.empty())
     throw std::runtime_error("No segments");
 
@@ -61,7 +77,6 @@ LineSegment BSP::get_longest_segment(std::vector<LineSegment> segments) {
   for (const LineSegment &seg : segments) {
     Vec2 delta = seg.pos_a - seg.pos_b;
     float length = std::sqrt(delta.x * delta.x + delta.y * delta.y);
-
     if (length > max_length) {
       max_length = length;
       longest = *const_cast<LineSegment*>(&seg);
@@ -73,7 +88,7 @@ LineSegment BSP::get_longest_segment(std::vector<LineSegment> segments) {
 
 
 void BSP::process_node(BSPNode *node) {
-  node->partition = new Partition(get_longest_segment(node->segments));
+  node->partition = new Partition(get_longest_segment(node->segments)); 
   node->front = std::make_unique<BSPNode>();
   node->back = std::make_unique<BSPNode>();
   for (LineSegment &segment : node->segments) {
@@ -81,22 +96,19 @@ void BSP::process_node(BSPNode *node) {
     switch (result) {
       case Side::BACK:
         node->back->segments.push_back(segment);
-        //std::cout << "BACK" << std::endl;
         break;
       case Side::FRONT:
         node->front->segments.push_back(segment);
-        //std::cout << "FRONT" << std::endl;
+        break;
+      case Side::BETWEEN:
+        // TODO - tbh i have no idea how to handle these....
         break;
       }
   }
-  //std::cout << "SIZE:" << this->queue.size() << std::endl;
   if (node->back->segments.size() > 1) {
     this->queue.push(node->back.get());
-    std::cout << "QUENING ON BACK" << node->back->segments.size() << std::endl;
   }
   if (node->front->segments.size() > 1) {
     this->queue.push(node->front.get());
-        std::cout << "QUENING ON FRONT" << node->front->segments.size() << std::endl;
   }
-  std::cout << this->queue.front() << std::endl;
 }
