@@ -4,7 +4,6 @@
 #include "utils/line_segment.hpp"
 
 #include <cassert>
-#include <cstdio>
 #include <iostream>
 #include <memory>
 #include <ostream>
@@ -100,15 +99,15 @@ void BSP::process_node(BSPNode *node) {
       case Side::FRONT:
         node->front->segments.push_back(segment);
         break;
-      //case Side::BETWEEN:
+      case Side::BETWEEN:
         // TODO - tbh i have no idea how to handle these....
-        //break;
+        break;
       }
   }
-  if (node->back->segments.size() < 1) {
+  if (node->back->segments.size() > 1) {
     this->queue.push(node->back.get());
   }
-  if (node->front->segments.size() < 1) {
+  if (node->front->segments.size() > 1) {
     this->queue.push(node->front.get());
   }
 }

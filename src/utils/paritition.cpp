@@ -1,5 +1,4 @@
 #include "utils/line_segment.hpp"
-#include "core/bsp.hpp"
 #include <iostream>
 #include <stdexcept>
 
@@ -35,7 +34,7 @@ bool Partition::is_in_front(LineSegment segment) {
     float d1 = side(segment.pos_a, this->partition);
     float d2 = side(segment.pos_b, this->partition);
     std::cout << "D1 and D2: " << d1 << d2 << std::endl;
-    return d1 >= 0 && d2 >= 0;
+    return d1 > 0 && d2 > 0;
 }
 
 
@@ -50,6 +49,6 @@ bool Partition::is_in_back(LineSegment segment) {
     float d1 = side(segment.pos_a, this->partition);
     float d2 = side(segment.pos_b, this->partition);
 
-    return d1 <= 0 && d2 <= 0;
+    return d1 < 0 && d2 < 0;
 }
 
