@@ -11,11 +11,9 @@ public:
     
     void drawLine();
     
-    bool tick();
+    void tick();
 
 private:
-    bool is_quit_pressed();
-    bool running;
     SDL_Event event;
     SDL_Window* window;
     SDL_Renderer* renderer;

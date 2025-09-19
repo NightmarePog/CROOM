@@ -39,21 +39,10 @@ GraphicsWindow::~GraphicsWindow() {
   SDL_Quit();
 }
 
-bool GraphicsWindow::tick() {
+void GraphicsWindow::tick() {
 
   SDL_SetRenderDrawColor(globals::renderer, 0, 0, 50, 255);
   SDL_RenderClear(globals::renderer);
   render(globals::renderer, &globals::map);
   SDL_RenderPresent(globals::renderer);
-  return is_quit_pressed();
-}
-
-bool GraphicsWindow::is_quit_pressed() {
-  while (SDL_PollEvent(&event)) {
-    if (event.type == SDL_QUIT)
-      return false;
-    if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-      return false;
-  }
-  return true;
 }

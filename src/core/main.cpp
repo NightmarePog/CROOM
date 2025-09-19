@@ -5,7 +5,6 @@
 #include "utils/globals.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_timer.h>
-
 GraphicsWindow window("a window", 1000, 1000);
 
 bool running = true;
@@ -13,10 +12,15 @@ bool running = true;
 // Main loop: repeatedly calls window.tick() every `interval` seconds.
 // Updates the window and processes input events.
 void heartbeat(double interval) {
+  UserInput user_input;
   while (running) {
-    running = window.tick();
+    user_input = globals::user_input.poll_input_event();
+    if (user_input == UserInput::QUIT) {
+      running = false;
+    }
+
+    window.tick();
     SDL_Delay(interval * 1000);
-    globals::user_input.poll_input_event();
   }
 }
 
