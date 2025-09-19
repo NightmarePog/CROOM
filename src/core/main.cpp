@@ -16,6 +16,7 @@ void heartbeat(double interval) {
   while (running) {
     running = window.tick();
     SDL_Delay(interval * 1000);
+    globals::user_input.poll_input_event();
   }
 }
 
@@ -32,5 +33,7 @@ int main() {
   BSP bsp;
   bsp.load_from_map(&globals::map);
   bsp.build_bsp();
+  // user input init
+  globals::user_input = UserInputService();
   ready();
 }
