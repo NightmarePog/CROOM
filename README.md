@@ -14,3 +14,4 @@ This is also my very first C++/SDL project.
 - C++
 - SDL2
 - CMake
+- Ninja (optional but I use it for compilation)
