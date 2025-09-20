@@ -19,6 +19,8 @@ void heartbeat(double interval) {
       running = false;
     }
 
+    globals::map.get_player()->move(user_input);
+
     window.tick();
     SDL_Delay(interval * 1000);
   }

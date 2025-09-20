@@ -1,6 +1,7 @@
 #pragma once
 #include "game/entity.hpp"
 #include "utils/vec2.hpp"
+#include "core/user_input.hpp"
 
 class Player: public Entity {
    private:
@@ -11,7 +12,7 @@ class Player: public Entity {
 
    explicit Player(int speed);
 
-   void move(Vec2);
+   void move(UserInput input);
 
    Vec2 get_position();
 };

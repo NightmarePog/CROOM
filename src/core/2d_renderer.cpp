@@ -17,7 +17,7 @@ void render(SDL_Renderer *renderer, Map *map) {
   }
   Player *plr = map->get_player();
   std::cout << "PLR POSITION:" << plr->get_position().x << "," << plr->get_position().y << std::endl;
-  SDL_Rect rect {100, 100, static_cast<int>(plr->get_position().x), static_cast<int>(plr->get_position().y)};
+  SDL_Rect rect {static_cast<int>(plr->get_position().x), static_cast<int>(plr->get_position().y), 16, 16};
   SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // zelená
   SDL_RenderFillRect(renderer, &rect);
 };
