@@ -4,19 +4,21 @@
 
 UserInputService::UserInputService() {};
 
+#include <SDL2/SDL.h>
+
 UserInput UserInputService::poll_input_event() {
     while (SDL_PollEvent(&this->event)) {
         if (event.type == SDL_QUIT)
             return UserInput::QUIT;
-        if (event.type == SDL_KEYDOWN) {
-            switch (event.key.keysym.sym) {
-                case SDLK_w: return UserInput::W;
-                case SDLK_a: return UserInput::A;
-                case SDLK_s: return UserInput::S;
-                case SDLK_d: return UserInput::D;
-                case SDLK_ESCAPE: return UserInput::QUIT;
-            }
-        }
     }
+
+    const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
+    if (keystates[SDL_SCANCODE_W]) return UserInput::W;
+    if (keystates[SDL_SCANCODE_A]) return UserInput::A;
+    if (keystates[SDL_SCANCODE_S]) return UserInput::S;
+    if (keystates[SDL_SCANCODE_D]) return UserInput::D;
+    if (keystates[SDL_SCANCODE_ESCAPE]) return UserInput::QUIT;
+
     return UserInput::UNDEFINED;
 }
