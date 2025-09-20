@@ -1,5 +1,10 @@
 #pragma once
 #include <SDL_events.h>
+
+/**
+enum of available keys
+QUIT = esc
+*/
 enum class UserInput {
     W,
     A,
@@ -14,6 +19,10 @@ class UserInputService {
         SDL_Event event;
     public:
         UserInputService();
+        /**
+        gets a key that user is currectly holding
+        @returns a key player is currectly holding
+        */
         UserInput poll_input_event();
 
     

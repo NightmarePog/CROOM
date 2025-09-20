@@ -5,6 +5,10 @@
 #include "utils/vec2.hpp"
 #include <memory>
 #include <vector>
+
+/**
+Map is a class of whole map, it have informations about player, walls etc.
+*/
 class Map {
    std::vector<std::unique_ptr<Sprite>> sprite_vec;
    Vec2 map_size;

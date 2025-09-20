@@ -5,12 +5,15 @@
 
 class GraphicsWindow {
 public:
+    /**
+    creates Graphics window
+    */
     explicit GraphicsWindow(const char* title, int width, int height);
 
     ~GraphicsWindow();
-    
-    void drawLine();
-    
+    /**
+    runs on game tick, rerender the scene for next frame
+    */    
     void tick();
 
 private:

@@ -1,5 +1,6 @@
 #pragma once
 
+/** simple struct of vector with 2 values and overrides */
 struct Vec2 {
     float x, y;
 

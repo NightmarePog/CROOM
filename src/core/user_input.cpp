@@ -1,10 +1,12 @@
  #include "core/user_input.hpp"
 #include <SDL_events.h>
 #include <SDL_keycode.h>
+#include <SDL2/SDL.h>
+
+// TODO multiple key press
 
 UserInputService::UserInputService() {};
 
-#include <SDL2/SDL.h>
 
 UserInput UserInputService::poll_input_event() {
     while (SDL_PollEvent(&this->event)) {
