@@ -20,9 +20,10 @@ void heartbeat(double interval) {
     }
 
     globals::map.get_player()->move(user_input);
+    globals::map.get_player()->rotate(user_input);
 
     window.tick();
-    SDL_Delay(interval * 1000);
+    SDL_Delay(interval * 100);
   }
 }
 
@@ -35,7 +36,7 @@ int main() {
   // loads all needed assets
   globals::map = Map({128, 128});
   globals::map.import_from_csv("../assets/map.csv");
-  globals::map.add_player(new Player(16));
+  globals::map.add_player(new Player(90));
   BSP bsp;
   bsp.load_from_map(&globals::map);
   bsp.build_bsp();

@@ -10,6 +10,8 @@ enum class UserInput {
     A,
     S,
     D,
+    ARROW_LEFT,
+    ARROW_RIGHT,
     QUIT,
     UNDEFINED
 };

@@ -2,12 +2,26 @@
 #include "game/map.hpp"
 #include "game/player.hpp"
 #include "game/sprite.hpp"
+#include <SDL_pixels.h>
 #include <SDL_render.h>
+#include <cstddef>
 #include <iostream>
+#include <stdexcept>
+
+SDL_Texture* create_solid_texture(SDL_Renderer* renderer, int size, SDL_Color color) {
+    SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, size, size);
+    SDL_SetRenderTarget(renderer, tex);
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(renderer, nullptr);
+    return tex;
+}
+
+
 
 void render(SDL_Renderer *renderer, Map *map) {
   if (!renderer)
-    return;
+    throw std::runtime_error("No render found");
   const auto &sprite_vec = map->get_entity_vector();
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
   for (size_t i = 0; i < sprite_vec.size(); ++i) {
@@ -16,8 +30,12 @@ void render(SDL_Renderer *renderer, Map *map) {
                        cords.pos_b.y);
   }
   Player *plr = map->get_player();
-  std::cout << "PLR POSITION:" << plr->get_position().x << "," << plr->get_position().y << std::endl;
-  SDL_Rect rect {static_cast<int>(plr->get_position().x), static_cast<int>(plr->get_position().y), 16, 16};
-  SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // zelená
-  SDL_RenderFillRect(renderer, &rect);
-};
+    SDL_Rect dstRect {
+        static_cast<int>(plr->get_position().x - 8),
+        static_cast<int>(plr->get_position().y - 8),
+        16,
+        16
+    };
+    
+    SDL_RenderCopyEx(renderer, create_solid_texture(renderer, 16, SDL_Color(255,0,0,255)), nullptr, &dstRect, -plr->get_rotation(), nullptr, SDL_FLIP_NONE);
+}
