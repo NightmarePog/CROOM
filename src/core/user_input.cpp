@@ -3,28 +3,39 @@
 #include <SDL_keycode.h>
 #include <SDL2/SDL.h>
 #include <SDL_scancode.h>
-
-// TODO multiple key press
-// IDEA might return queue of keys
+#include <cstddef>
+#include <cstdlib>
+#include <vector>
 
 UserInputService::UserInputService() {};
 
+const UserInput inputs[] = {UserInput::QUIT, UserInput::W, UserInput::A, UserInput::S, UserInput::D, UserInput::ARROW_LEFT, UserInput::ARROW_RIGHT};
 
-UserInput UserInputService::poll_input_event() {
+std::vector<UserInput> UserInputService::poll_input_event() {
+    std::vector<UserInput>output;
+
     while (SDL_PollEvent(&this->event)) {
-        if (event.type == SDL_QUIT)
-            return UserInput::QUIT;
+        if (event.type == SDL_QUIT) {
+            output = {inputs[0]};
+            return output;
+        }
     }
 
     const Uint8* keystates = SDL_GetKeyboardState(NULL);
+    const Uint8 scans[] = {keystates[SDL_SCANCODE_Q], keystates[SDL_SCANCODE_W], keystates[SDL_SCANCODE_A], keystates[SDL_SCANCODE_S], keystates[SDL_SCANCODE_D], keystates[SDL_SCANCODE_LEFT], keystates[SDL_SCANCODE_RIGHT]};
 
-    if (keystates[SDL_SCANCODE_W]) return UserInput::W;
-    if (keystates[SDL_SCANCODE_A]) return UserInput::A;
-    if (keystates[SDL_SCANCODE_S]) return UserInput::S;
-    if (keystates[SDL_SCANCODE_D]) return UserInput::D;
-    if (keystates[SDL_SCANCODE_LEFT]) return UserInput::ARROW_LEFT;
-    if (keystates[SDL_SCANCODE_RIGHT]) return UserInput::ARROW_RIGHT;
-    if (keystates[SDL_SCANCODE_ESCAPE]) return UserInput::QUIT;
+    int added = 0;
+    int i = 0;
+    for (int scan : scans) {
+        if (scan) {
+            output.resize(added+1);
+            output[added] = inputs[i];
+            added++;
+        }
+        i++;
+    }
+    output.resize(added+1);
+    output[added] = UserInput::UNDEFINED;
 
-    return UserInput::UNDEFINED;
+    return output;
 }

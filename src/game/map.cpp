@@ -25,6 +25,8 @@ int Map::add_entity(Sprite *sprite) {
 
 void Map::add_player(Player *player) {
   this->plr = player;
+  this->plr->set_spawn(Vec2(64,64));
+  this->plr->respawn();
 }
 
 Player* Map::get_player() {

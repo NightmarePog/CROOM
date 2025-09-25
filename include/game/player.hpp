@@ -11,17 +11,25 @@ player class, it have propreties of player and few methods
 class Player: public Entity {
    private:
    /**
-   players currect absolute position
+   players current absolute position
    */
    Vec2 position;
+   /**
+   players absolute spawn position
+   */
+   Vec2 spawn_position;
    /**
    speed in which player can move
    */
    int speed;
    /**
-   currect player rotation
+   current player rotation
    */
    float rotation;
+   /**
+   speed in which player can rotate
+   */
+   int rotation_speed;
    /** 
    Field of view
    */
@@ -34,10 +42,10 @@ class Player: public Entity {
    /** 
    according to @param input moves the player selected way
    */
-   void move(UserInput input);
+   void move(std::vector<UserInput> input);
    /**
    rotates the player according to @param input */
-   void rotate(UserInput input);
+   void rotate(std::vector<UserInput> input);
    /**
    gets currect player rotation
    */
@@ -46,6 +54,14 @@ class Player: public Entity {
    @returns player's FOV
    */
    int get_FOV();
+   /**
+   respawns player (moves to spawn_position)
+   */
+   void respawn();
+   /**
+   sets spawn position of player
+   */
+   void set_spawn(Vec2 new_position);
 
    /**
    gets player currect position
