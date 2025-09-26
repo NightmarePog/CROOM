@@ -4,6 +4,7 @@
 #include "utils/vec2.hpp"
 #include "core/user_input.hpp"
 #include <vector>
+#include <queue>
 
 /** 
 player class, it have propreties of player and few methods
@@ -38,10 +39,10 @@ class Player: public Entity {
    /** 
    according to @param input moves the player selected way
    */
-   void move(std::vector<UserInput> input);
+   void move(std::queue<UserInput> input);
    /**
    rotates the player according to @param input */
-   void rotate(std::vector<UserInput> input);
+   void rotate(std::queue<UserInput> input);
    /**
    gets currect player rotation
    */
