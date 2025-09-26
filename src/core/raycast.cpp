@@ -1,18 +1,16 @@
 #include "core/bsp.hpp"
-#include "core/graphics_window.hpp"
-#include "core/user_input.hpp"
 #include "game/map.hpp"
-#include "game/player.hpp"
-#include "game/sprite.hpp"
-#include "utils/globals.hpp"
 
 #include "utils/vec2.hpp"
 #include <cmath>
 #include <optional>
-#include <vector>
 #include "core/raycast.hpp"
 
+// TODO implement raycast
+// Basic idea of how the structure should look?
+
 Raycast::Raycast(Map *map, const Vec2& startPos, const Vec2& endPos) {
+    // Helpful variables
     this->map = map;
     this->start = startPos;
     this->end = endPos;
