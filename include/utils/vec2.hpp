@@ -21,12 +21,4 @@ struct Vec2 {
     bool operator==(const Vec2& other) const {
         return x == other.x && y == other.y;
     }
-
-    // bool operator>(const Vec2& other) const {
-    //     return x+y > other.x+other.y;
-    // }
-
-    // bool operator<(const Vec2& other) const {
-    //     return x+y < other.x+other.y;
-    // }
 };
