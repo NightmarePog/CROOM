@@ -15,10 +15,6 @@ class Player: public Entity {
    */
    Vec2 position;
    /**
-   players absolute spawn position
-   */
-   Vec2 spawn_position;
-   /**
    speed in which player can move
    */
    int speed;
@@ -54,14 +50,6 @@ class Player: public Entity {
    @returns player's FOV
    */
    int get_FOV();
-   /**
-   respawns player (moves to spawn_position)
-   */
-   void respawn();
-   /**
-   sets spawn position of player
-   */
-   void set_spawn(Vec2 new_position);
 
    /**
    gets player currect position
