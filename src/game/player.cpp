@@ -4,12 +4,11 @@
 #include "utils/vec2.hpp"
 #include <cmath>
 #include <cstdlib>
-#include <vector>
+#include <queue>
 
 Player::Player(int fov) {
   this->speed = 16;
-  this->position = {0,0};
-  this->spawn_position = {0,0};
+  this->position = {64,64};
   this->rotation = 0;
   this->rotation_speed = 20;
   this->FOV = fov;
@@ -17,11 +16,11 @@ Player::Player(int fov) {
 
 Vec2 Player::get_position() { return this->position; }
 
-void Player::move(std::vector<UserInput> input) {
+void Player::move(std::queue<UserInput> input) {
     Vec2 move_direction{0, 0};
 
-    for (UserInput i : input) {
-      switch (i) {
+    while(input.size() > 0) {
+      switch (input.front()) {
         case UserInput::W: move_direction = move_direction + Vec2(0, -1); break;
         case UserInput::A: move_direction = move_direction + Vec2(-1, 0); break;
         case UserInput::S: move_direction = move_direction + Vec2(0, 1); break;
@@ -30,13 +29,14 @@ void Player::move(std::vector<UserInput> input) {
         case UserInput::ARROW_RIGHT:
         case UserInput::QUIT:
         case UserInput::UNDEFINED:
-            if (move_direction == 0) return;
             break;
       }
-      // slow down if moving diagonal
-      if (abs(move_direction.x)+abs(move_direction.y)>1) {
-        move_direction = move_direction*0.5;
-      }
+      input.pop();
+    }
+    if (move_direction == 0) return;
+    // slow down if moving diagonal
+    if (abs(move_direction.x)+abs(move_direction.y)>1) {
+      move_direction = move_direction*0.5;
     }
 
     float rotation_rad = this->rotation * (M_PI / 180.0f);
@@ -57,9 +57,9 @@ float Player::get_rotation() {
   return this->rotation;
 }
 
-void Player::rotate(std::vector<UserInput> input) {
-  for (UserInput i : input) {
-    switch (i) {
+void Player::rotate(std::queue<UserInput> input) {
+  while(input.size() > 0) {
+    switch (input.front()) {
       case UserInput::ARROW_LEFT:
         this->rotation += this->rotation_speed*constants::FRAME_INTERVAL;
         if (this->rotation > 360) {
@@ -80,13 +80,6 @@ void Player::rotate(std::vector<UserInput> input) {
       case UserInput::UNDEFINED:
         break;
     }
+    input.pop();
   }
-}
-
-void Player::respawn() {
-  Player::position = Player::spawn_position;
-}
-
-void Player::set_spawn(Vec2 new_position) {
-  Player::spawn_position = new_position;
 }
