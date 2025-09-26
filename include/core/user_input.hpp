@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL_events.h>
-#include <vector>
+#include <queue>
 
 /**
 enum of available keys
@@ -26,7 +26,7 @@ class UserInputService {
         gets a key that user is currectly holding
         @returns a key player is currectly holding
         */
-        std::vector<UserInput> poll_input_event();
+        std::queue<UserInput> poll_input_event();
 
     
 };
