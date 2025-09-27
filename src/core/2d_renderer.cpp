@@ -3,9 +3,9 @@
 #include "game/player.hpp"
 #include "game/sprite.hpp"
 #include <SDL_pixels.h>
+#include <SDL_rect.h>
 #include <SDL_render.h>
 #include <cstddef>
-#include <iostream>
 #include <stdexcept>
 
 SDL_Texture* create_solid_texture(SDL_Renderer* renderer, int size, SDL_Color color) {
@@ -16,8 +16,6 @@ SDL_Texture* create_solid_texture(SDL_Renderer* renderer, int size, SDL_Color co
     SDL_SetRenderTarget(renderer, nullptr);
     return tex;
 }
-
-
 
 void render(SDL_Renderer *renderer, Map *map) {
   if (!renderer)
@@ -30,12 +28,21 @@ void render(SDL_Renderer *renderer, Map *map) {
                        cords.pos_b.y);
   }
   Player *plr = map->get_player();
-    SDL_Rect dstRect {
-        static_cast<int>(plr->get_position().x - 8),
-        static_cast<int>(plr->get_position().y - 8),
-        16,
-        16
-    };
-    
-    SDL_RenderCopyEx(renderer, create_solid_texture(renderer, 16, SDL_Color(255,0,0,255)), nullptr, &dstRect, -plr->get_rotation(), nullptr, SDL_FLIP_NONE);
+  SDL_Rect dstRect {
+      static_cast<int>(plr->get_position().x - 8),
+      static_cast<int>(plr->get_position().y - 8),
+      16,
+      16
+  };
+  // useful for debug showing rotation
+  SDL_Rect arrowRect {
+      static_cast<int>(plr->get_position().x - 16),
+      static_cast<int>(plr->get_position().y - 2),
+      32,
+      4
+  };
+  SDL_Texture *tex = create_solid_texture(renderer, 16, SDL_Color(255,0,0,255));
+  SDL_RenderCopyEx(renderer, tex, nullptr, &arrowRect, -plr->get_rotation(), nullptr, SDL_FLIP_NONE);
+  SDL_RenderCopyEx(renderer, tex, nullptr, &dstRect, -plr->get_rotation(), nullptr, SDL_FLIP_NONE);
+  SDL_DestroyTexture(tex);
 }

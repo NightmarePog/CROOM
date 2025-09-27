@@ -1,27 +1,29 @@
 #include "core/bsp.hpp"
 #include "core/graphics_window.hpp"
+#include "core/user_input.hpp"
 #include "game/map.hpp"
 #include "game/player.hpp"
 #include "utils/globals.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_timer.h>
-GraphicsWindow window("a window", 1000, 1000);
+#include <queue>
+GraphicsWindow window("CROOM", 1000, 1000);
 
 bool running = true;
 
 // Main loop: repeatedly calls window.tick() every `interval` seconds.
 // Updates the window and processes input events.
 void heartbeat(double interval) {
-  UserInput user_input;
+  std::queue<UserInput> user_input;
   while (running) {
     user_input = globals::user_input.poll_input_event();
-    if (user_input == UserInput::QUIT) {
+    // quickly exits without looping all keys
+    if (user_input.front() == UserInput::QUIT) {
       running = false;
     }
 
     globals::map.get_player()->move(user_input);
     globals::map.get_player()->rotate(user_input);
-
     window.tick();
     SDL_Delay(interval * 100);
   }
