@@ -1,4 +1,5 @@
 #pragma once
+#include "core/bsp.hpp"
 #include "game/sprite.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_render.h>
@@ -14,7 +15,7 @@ public:
     /**
     runs on game tick, rerender the scene for next frame
     */    
-    void tick();
+    void tick(BSPNode* bsp_node);
 
 private:
     SDL_Event event;

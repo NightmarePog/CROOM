@@ -1,3 +1,4 @@
+#include "core/2d_render.hpp"
 #include "core/bsp.hpp"
 #include "core/graphics_window.hpp"
 #include "core/user_input.hpp"
@@ -8,7 +9,7 @@
 #include <SDL_timer.h>
 #include <queue>
 GraphicsWindow window("CROOM", 1000, 1000);
-
+BSPNode* bsp_node;
 bool running = true;
 
 // Main loop: repeatedly calls window.tick() every `interval` seconds.
@@ -24,7 +25,8 @@ void heartbeat(double interval) {
 
     globals::map.get_player()->move(user_input);
     globals::map.get_player()->rotate(user_input);
-    window.tick();
+    
+    window.tick(bsp_node);
     SDL_Delay(interval * 100);
   }
 }
@@ -42,6 +44,7 @@ int main() {
   BSP bsp;
   bsp.load_from_map(&globals::map);
   bsp.build_bsp();
+  bsp_node = bsp.root;
   // user input init
   globals::user_input = UserInputService();
   ready();

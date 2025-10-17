@@ -26,10 +26,6 @@ class BSP {
         */
         bool is_loaded;
         /**
-        root node of BSP tree
-        */
-        BSPNode* root;
-        /**
         gets a longest segment in vector
         @param std::vector<LineSegment> vector of segments
         @returns longest LineSegment
@@ -44,6 +40,10 @@ class BSP {
         */
         std::queue <BSPNode*> queue;
     public:
+            /**
+        root node of BSP tree
+        */
+        BSPNode* root;
         BSP();
         /** loads the map from CSV file */
         void load_from_csv();

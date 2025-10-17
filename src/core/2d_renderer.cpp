@@ -1,4 +1,5 @@
 #include "core/2d_render.hpp"
+#include "core/bsp.hpp"
 #include "game/map.hpp"
 #include "game/player.hpp"
 #include "game/sprite.hpp"
@@ -6,6 +7,9 @@
 #include <SDL_rect.h>
 #include <SDL_render.h>
 #include <cstddef>
+#include <SDL_ttf.h>
+#include <memory>
+#include <queue>
 #include <stdexcept>
 
 SDL_Texture* create_solid_texture(SDL_Renderer* renderer, int size, SDL_Color color) {
@@ -16,6 +20,54 @@ SDL_Texture* create_solid_texture(SDL_Renderer* renderer, int size, SDL_Color co
     SDL_SetRenderTarget(renderer, nullptr);
     return tex;
 }
+
+void render_lines(SDL_Renderer *renderer, BSPNode *bsp, TTF_Font* font) {
+    if (!renderer) {
+        throw std::runtime_error("no renderer found");
+    }
+
+    if (!bsp) return;
+
+    std::queue<BSPNode*> node_queue;
+    node_queue.push(bsp);
+
+    while (!node_queue.empty()) {
+        BSPNode *curr = node_queue.front();
+        node_queue.pop();
+
+        int index = 0;
+        for (const auto &x : curr->segments) {
+            // nakresli čáru
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+            SDL_RenderDrawLine(renderer, x.pos_a.x, x.pos_a.y, x.pos_b.x, x.pos_b.y);
+
+            // malý puntík na začátku čáry
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+            SDL_Rect dot = {static_cast<int>(x.pos_a.x - 2), static_cast<int>(x.pos_a.y - 2), 4, 4};
+            SDL_RenderFillRect(renderer, &dot);
+
+            // vykreslení čísla u čáry
+            if (font) {
+                std::string label = std::to_string(index);
+                SDL_Color textColor = {255, 255, 255, 255}; // bílá barva
+                SDL_Surface* textSurface = TTF_RenderText_Solid(font, label.c_str(), textColor);
+                if (textSurface) {
+                    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+                    SDL_Rect dstRect = {static_cast<int>(x.pos_a.x + 4), static_cast<int>(x.pos_a.y + 4), textSurface->w, textSurface->h};
+                    SDL_RenderCopy(renderer, textTexture, nullptr, &dstRect);
+                    SDL_DestroyTexture(textTexture);
+                    SDL_FreeSurface(textSurface);
+                }
+            }
+
+            index++;
+        }
+
+        if (curr->front) node_queue.push(curr->front.get());
+        if (curr->back)  node_queue.push(curr->back.get());
+    }
+}
+
 
 void render(SDL_Renderer *renderer, Map *map) {
   if (!renderer)

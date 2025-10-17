@@ -26,6 +26,10 @@ else()
     message(FATAL_ERROR "SDL2 not found!")
 endif()
 
-# SDL2_image 
+# SDL2_ttf 
+target_include_directories(CROOM PRIVATE /usr/include/SDL2)
+target_link_libraries(CROOM PRIVATE SDL2_ttf)
+
+# SDL2_image
 target_include_directories(CROOM PRIVATE /usr/include/SDL2)
 target_link_libraries(CROOM PRIVATE SDL2_image)

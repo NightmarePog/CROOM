@@ -19,7 +19,7 @@ void printBSPTree(const BSPNode* node, const std::string& prefix = "", bool isFr
     std::cout << (isFront ? "├──" : "└──");
 
     std::cout << "[";
-    std::cout << "Segments: " << node->segments.size() << "]\n";
+    std::cout << "Segments: " << node->segments.size() << (isFront ? "front" : "back") <<"]\n";
 
     std::string newPrefix = prefix + (isFront ? "│   " : "    ");
     printBSPTree(node->front.get(), newPrefix, true);
