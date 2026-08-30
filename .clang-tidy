@@ -1,0 +1,4 @@
+Checks: '-*,clang-analyzer-*,bugprone-*,-bugprone-easily-swappable-parameters,performance-*,-performance-noexcept-move-constructor,portability-*,-portability-avoid-pragma-once,readability-redundant-*,readability-simplify-boolean-expr,readability-container-size-empty,readability-else-after-return'
+WarningsAsErrors: '*'
+HeaderFilterRegex: '(^|.*/)src/.*'
+FormatStyle: file
