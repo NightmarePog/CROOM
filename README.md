@@ -75,10 +75,9 @@ cmake --build build-sanitize
   `src/`.
 - `src/game/` contains the map, player, and collision code. `CollisionBsp` is a
   small facade over geometry checks, the collision tree, and movement resolution.
-  These components form the SDL-independent `croom_game` library.
 - `src/geometry/` contains the small value types shared by gameplay code.
 - `src/input/`, `src/platform/`, and `src/rendering/` contain SDL-facing runtime
-  code and form the `croom_runtime` library.
+  code.
 
 Files are grouped by domain, with matching headers and implementations beside
 each other, such as `src/game/map.hpp` and `src/game/map.cpp`. Related collision
