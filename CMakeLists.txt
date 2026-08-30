@@ -1,35 +1,28 @@
 cmake_minimum_required(VERSION 3.16)
 project(CROOM VERSION 1.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-
-file(GLOB_RECURSE CORE_SOURCES ${CMAKE_SOURCE_DIR}/src/core/*.cpp)
-file(GLOB_RECURSE GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/game/*.cpp)
-file(GLOB_RECURSE UTILS_SOURCES ${CMAKE_SOURCE_DIR}/src/utils/*.cpp)
+find_package(SDL2 REQUIRED CONFIG)
 
 add_executable(CROOM
-    ${CORE_SOURCES}
-    ${GAME_SOURCES}
-    ${UTILS_SOURCES}
+    src/main.cpp
+    src/data_structures/binary_tree/binary_tree.cpp
+    src/game/bsp/bsp.cpp
+    src/game/map/map.cpp
+    src/game/player/player.cpp
+    src/game/raycast/raycast.cpp
+    src/game/sprite/sprite.cpp
+    src/geometry/partition/partition.cpp
+    src/input/user_input/user_input.cpp
+    src/rendering/graphics_window/graphics_window.cpp
+    src/rendering/renderer_2d/renderer_2d.cpp
 )
 
-# SDL2
-find_package(SDL2 REQUIRED)
-if (SDL2_FOUND)
-    target_include_directories(CROOM PRIVATE ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(CROOM PRIVATE ${SDL2_LIBRARIES})
-else()
-    message(FATAL_ERROR "SDL2 not found!")
+target_compile_features(CROOM PRIVATE cxx_std_20)
+target_include_directories(CROOM PRIVATE src)
+target_link_libraries(CROOM PRIVATE SDL2::SDL2)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(CROOM PRIVATE -Wall -Wextra -Wpedantic)
 endif()
-
-# SDL2_ttf 
-target_include_directories(CROOM PRIVATE /usr/include/SDL2)
-target_link_libraries(CROOM PRIVATE SDL2_ttf)
-
-# SDL2_image
-target_include_directories(CROOM PRIVATE /usr/include/SDL2)
-target_link_libraries(CROOM PRIVATE SDL2_image)
