@@ -25,14 +25,24 @@ float Player::next_heading(float turn, float delta_seconds) const {
   return wrapped < 0.0f ? wrapped + 360.0f : wrapped;
 }
 
-Vec2 Player::movement_for(const PlayerCommand &command, float heading) const {
-  const Vec2 axes{clamp(command.strafe, -1.0f, 1.0f),
-                  clamp(command.forward, -1.0f, 1.0f)};
+Vec2 Player::command_axes(const PlayerCommand &command) {
+  return {clamp(command.strafe, -1.0f, 1.0f),
+          clamp(command.forward, -1.0f, 1.0f)};
+}
+
+Vec2 Player::rotate_axes(Vec2 axes, float heading) {
   const float radians = heading * (numbers::pi_v<float> / 180.0f);
-  Vec2 movement{sin(radians) * axes.y + cos(radians) * axes.x,
-                -cos(radians) * axes.y + sin(radians) * axes.x};
+  return {sin(radians) * axes.y + cos(radians) * axes.x,
+          -cos(radians) * axes.y + sin(radians) * axes.x};
+}
+
+Vec2 Player::limit_length(Vec2 movement) {
   const float length = movement.length();
   return length > 1.0f ? movement / length : movement;
+}
+
+Vec2 Player::movement_for(const PlayerCommand &command, float heading) const {
+  return limit_length(rotate_axes(command_axes(command), heading));
 }
 
 void Player::update(const PlayerCommand &command, float delta_seconds,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rendering/renderer_2d.hpp"
+#include "rendering/renderer_3d.hpp"
 
 #include <memory>
 
@@ -37,14 +37,12 @@ private:
   using WindowHandle = std::unique_ptr<SDL_Window, WindowDeleter>;
   using RendererHandle = std::unique_ptr<SDL_Renderer, RendererDeleter>;
 
-  class RendererFactory;
-
   static WindowHandle create_window(const char *title, int width, int height);
   static WindowHandle require_window(WindowHandle window);
 
   WindowHandle window_;
   RendererHandle sdl_renderer_;
-  Renderer2D renderer_2d_;
+  Renderer3D renderer_3d_;
 };
 
 }

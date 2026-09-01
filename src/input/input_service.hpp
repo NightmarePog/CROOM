@@ -22,6 +22,8 @@ public:
 private:
   float read_axis(int positive_key, int negative_key) const;
   bool key_down(int key) const;
+  bool poll_quit_request() const;
+  InputState read_keyboard(bool quit_requested) const;
   static bool requests_quit(const SDL_Event &event);
   static void normalize_movement(InputState &input);
 

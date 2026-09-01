@@ -27,16 +27,23 @@ void InputService::normalize_movement(InputState &input) {
   input.strafe /= scale;
 }
 
-InputState InputService::poll() {
+bool InputService::poll_quit_request() const {
   bool quit_requested = false;
   SDL_Event event{};
-  while (SDL_PollEvent(&event) != 0) {
+  while (SDL_PollEvent(&event) != 0)
     quit_requested = quit_requested || requests_quit(event);
-  }
-  InputState input{read_axis(SDL_SCANCODE_W, SDL_SCANCODE_S),
-                   read_axis(SDL_SCANCODE_D, SDL_SCANCODE_A),
-                   read_axis(SDL_SCANCODE_RIGHT, SDL_SCANCODE_LEFT),
-                   quit_requested || key_down(SDL_SCANCODE_Q)};
+  return quit_requested;
+}
+
+InputState InputService::read_keyboard(bool quit_requested) const {
+  return {read_axis(SDL_SCANCODE_W, SDL_SCANCODE_S),
+          read_axis(SDL_SCANCODE_D, SDL_SCANCODE_A),
+          read_axis(SDL_SCANCODE_RIGHT, SDL_SCANCODE_LEFT),
+          quit_requested || key_down(SDL_SCANCODE_Q)};
+}
+
+InputState InputService::poll() {
+  InputState input = read_keyboard(poll_quit_request());
   normalize_movement(input);
   return input;
 }

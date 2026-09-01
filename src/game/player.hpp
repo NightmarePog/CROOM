@@ -30,6 +30,9 @@ private:
               const CollisionBsp &collisions);
 
   Vec2 movement_for(const PlayerCommand &command, float heading) const;
+  static Vec2 command_axes(const PlayerCommand &command);
+  static Vec2 rotate_axes(Vec2 axes, float heading);
+  static Vec2 limit_length(Vec2 movement);
   float next_heading(float turn, float delta_seconds) const;
   static void validate_update(const PlayerCommand &command, float delta_seconds);
 

@@ -10,7 +10,7 @@ namespace croom {
 
 class Map {
 public:
-  void load_from_csv(const std::filesystem::path &path);
+  explicit Map(const std::filesystem::path &path);
   void update(const PlayerCommand &command, float delta_seconds) {
     player_.update(command, delta_seconds, collisions_);
   }

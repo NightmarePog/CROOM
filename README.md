@@ -1,8 +1,7 @@
 # CROOM
 
-CROOM is a small top-down SDL2 prototype for experimenting with movement, map
-loading, rendering, and BSP-accelerated collision detection. It is not currently
-a Doom-style 3D renderer.
+CROOM is a small SDL2 raycasting prototype for experimenting with first-person
+rendering, movement, map loading, and BSP-accelerated collision detection.
 
 ## Requirements
 
@@ -75,9 +74,11 @@ cmake --build build-sanitize
   `src/`.
 - `src/game/` contains the map, player, and collision code. `CollisionBsp` is a
   small facade over geometry checks, the collision tree, and movement resolution.
-- `src/geometry/` contains the small value types shared by gameplay code.
+- `src/geometry/` contains the small value types shared by gameplay and rendering.
 - `src/input/`, `src/platform/`, and `src/rendering/` contain SDL-facing runtime
-  code.
+  code. `Raycaster` handles ray/segment intersections, `RaycastProjection`
+  converts those hits into screen columns, and `Renderer3D` only draws the
+  resulting first-person view. Maps do not need to use a tile grid.
 
 Files are grouped by domain, with matching headers and implementations beside
 each other, such as `src/game/map.hpp` and `src/game/map.cpp`. Related collision
